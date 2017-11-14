@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# H5 files
+*.h5
+*.xml
+
+# Integrator garbage
+*.sum
+*.plt
+*.asc

@@ -37,6 +37,7 @@
 #include "mbsim/links/contact.h"
 #include "mbsim/constitutive_laws/constitutive_laws.h"
 #include "mbsim/functions/sinusoidal_function.h"
+#include "mbsim/utils/rotarymatrices.h"
 
 #include "openmbvcppinterface/coilspring.h"
 #include "openmbvcppinterface/cuboid.h"

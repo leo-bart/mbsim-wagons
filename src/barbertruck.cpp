@@ -35,33 +35,38 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 	double bolsterWidth = 0.41; // taken at the widest part [m]
 	double bolsterHeight = .19; // [m]
 	double bolsterLength = 2.654; // [m]
-	double bolsterMass = 342. + 6500; // [kg]
+	double bolsterMass = 911. + 6500; // [kg]
 	fmatvec::SymMat bolsterInertiaTensor(3,fmatvec::EYE); // [kg.m²]
-	bolsterInertiaTensor(0,0) = 97;
-	bolsterInertiaTensor(1,1) = 99;
-	bolsterInertiaTensor(2,2) = 7;
-	double frictionCoefficient = 0.25; // [-]
+	bolsterInertiaTensor(0,0) = 508.90;
+	bolsterInertiaTensor(1,1) = 511.40;
+	bolsterInertiaTensor(2,2) = 24.80;
+	double frictionCoefficient = 0.20; // [-]
 	double wedgeMass = 12; // [kg] times two to represent 4 wedges per bolster
 	double wedgeHeight = 0.2; // [m]
 	double wedgeDepth = 0.12; // [m]
 	double wedgeSpringStiffness = 240000; // [N/m]
 	double wedgeSpringFreeLength = 0.2544; // [m]
 	double wheelBase = 1.829;
-	// double wheelRadius = 0.45;
+	double wheelsetMass = 1777.55; // [kg]
+	fmatvec::SymMat wheelsetInertiaTensor(3,fmatvec::EYE); // [kg.m²]
+	wheelsetInertiaTensor(0,0) = 1179.60;
+	wheelsetInertiaTensor(1,1) = 1179.60;
+	wheelsetInertiaTensor(2,2) = 138.00;
+	// double wheelRadius = 0.9652;
 	// side frame mass properties are doubled to represent both sides of the truck
 	double sideFrameHeight = .495; // [m]
 	double sideFrameWidth = .45; // [m]
-	double sideFrameMass = 290; // [kg]
-	double sideFrameTrack = 2.197; // [m]
+	double sideFrameMass = 630.00; // [kg]
+	double sideFrameTrack = 2 * 1.098; // [m]
 	fmatvec::SymMat sideFrameInertiaTensor(3,fmatvec::EYE); // [kg.m²]
-	sideFrameInertiaTensor(0,0) = 4;
-	sideFrameInertiaTensor(1,1) = 91;
-	sideFrameInertiaTensor(2,2) = 106;
+	sideFrameInertiaTensor(0,0) = 91.60;
+	sideFrameInertiaTensor(1,1) = 323.00;
+	sideFrameInertiaTensor(2,2) = 340.30;
 	double truckTrack = 1.575; // [m]
 	double bolsterSpringStiffness = 4.839868e+05; // [N/m]
 	double springBedOffset = 0.143; // [m]
 	//   double t1,t2,t3 = 0; // temporary storage
-	double coefRestitution = 0.005;  // TODO modify this parameter to be setted externally
+	double coefRestitution = 0.00;  // TODO modify this parameter to be setted externally
 
 	//acceleration of gravity
 	MBSimEnvironment::getInstance()->setAccelerationOfGravity ( Vec ( "[0.;-9.810;0]" ) );
@@ -265,12 +270,12 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 
 	wheelRear->setFrameOfReference(this->getFrame("RWS"));
 	wheelRear->setFrameForKinematics(wheelRear->getFrameC());
-	wheelRear->setMass(2000);
+	wheelRear->setMass(wheelsetMass);
 	//wheelRear->enableOpenMBV();
 
 	wheelFront->setFrameOfReference(this->getFrame("FWS"));
 	wheelFront->setFrameForKinematics(wheelFront->getFrameC());
-	wheelFront->setMass(2000);
+	wheelFront->setMass(wheelsetMass);
 	//wheelFront->enableOpenMBV();
 
 	/// ---------------- DEFINITION OF JOINTS -----------------------------------
@@ -387,7 +392,6 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 				// IF ELASTIC CONNECTIONS
 
 				if (bolsterWithBushings){
-					// TODO Add moments
 					/*
 4.085513e+04	2.535569e+04	1.818989e-12	1.607263e+04	7.427344e+05	2.014681e+07
 2.535569e+04	4.839868e+05	-5.261543e+03	-1.011572e+05	5.402705e+05	3.508579e+06
@@ -550,8 +554,8 @@ void BarberTruck::setWedgeContacts(Contour *wedgeFace,
 				otherFace );
 		contact->setNormalForceLaw ( new UnilateralConstraint() );
 		contact->setNormalImpactLaw ( new UnilateralNewtonImpact ( coefRestitution ) );
-//		contact->setTangentialImpactLaw ( new SpatialCoulombImpact ( frictionCoefficient ) );
-		contact->setTangentialForceLaw ( new SpatialCoulombFriction ( frictionCoefficient ) );
+		contact->setTangentialImpactLaw ( new SpatialCoulombImpact ( frictionCoefficient ) );
+//		contact->setTangentialForceLaw ( new SpatialCoulombFriction ( frictionCoefficient ) );
 		contact->setPlotFeature("generalizedForce",enabled);
 		contact->setPlotFeature("generalizedRelativePosition",enabled);
 		addLink(contact);

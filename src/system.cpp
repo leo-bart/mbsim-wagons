@@ -109,11 +109,19 @@ System::System(const string& projectName, const string& inputFileName) :
 
 	//	/// ----------------- TRUCKS ------------------------------------------------
 	Vec3 position(3, INIT, 0.0);
-	position(0) = -truckBaseDistance / 2;
+	position(0) = truckBaseDistance / 2;
 	BarberTruck *frontTruck = new BarberTruck("Front truck", bolsterBushing, truckWheelBase);
 	frontTruck->addFrame(new FixedRelativeFrame("FT_RefFrame",position,
 			SqrMat(3,EYE)));
+	frontTruck->setFrameOfReference(frontTruck->getFrame("FT_RefFrame"));
 	this->addGroup(frontTruck);
+
+//	position(0) = -truckBaseDistance / 2;
+//	BarberTruck *rearTruck = new BarberTruck("Rear truck", bolsterBushing, truckWheelBase);
+//	rearTruck->addFrame(new FixedRelativeFrame("RT_RefFrame",position,
+//			SqrMat(3,EYE)));
+//	rearTruck->setFrameOfReference(rearTruck->getFrame("RT_RefFrame"));
+//	this->addGroup(rearTruck);
 	//
 	//
 	//	/// -------------- MOTION DEFINITION ----------------------------------------
@@ -121,10 +129,43 @@ System::System(const string& projectName, const string& inputFileName) :
 	// front wheel, front truck = wheel 1
 	frontTruck->wheelRear->setTranslation(new Motion(freq,2*amplitude,t0,1));
 	// rear wheel, front truck = wheel2
-	frontTruck->wheelFront->setTranslation(new LinearTranslation<VecV>("[1,0;0,0;0,1]"));
+	frontTruck->wheelFront->setTranslation(new Motion(freq,2*amplitude,t0+0.5,1));
 	// front wheel, rear truck = wheel3
 //	frontTruck->sideFrame->setRotation(new CompositeFunction<RotMat3(double(double))>(
-//			new RotationAboutXAxis<double>(), new Angle(freq,3*amplitude,t0)));
+//			new RotationAboutXAxis<double>(), new Angle(freq,3*amplitude,t0)));n
+//	rearTruck->wheelRear->setTranslation(new TranslationAlongAxesXYZ<VecV>());
+
+
+
+
+	// ---------------------- Support plates ---------------------------
+	// next plates are used to apply vertical displacements to the wheelsets
+//	RigidBody *plateAA = new RigidBody("Plate AA");
+//	Vec3 r;
+//	r(0) = -truckBaseDistance/2 - truckWheelBase/2;
+//	r(2) = 1.575;
+//	r(1) = -0.00001;
+//	addFrame(new FixedRelativeFrame("AA",r,BasicRotAIKz(M_PI/2)));
+//	plateAA->setFrameOfReference(getFrame("AA"));
+//	getFrame("AA")->enableOpenMBV();
+//	addObject(plateAA);
+//	Plate *plateAAcontour = new Plate("Plate AA contour");
+//	plateAAcontour->enableOpenMBV();
+//	plateAA->addContour(plateAAcontour);
+//	plateAA->setTranslation(new Motion(freq,2*amplitude,t0,1));
+//
+//	Point *pt = new Point("PP");
+//	pt->setFrameOfReference(rearTruck->wheelRear->getFrame("SFR"));
+//	pt->enableOpenMBV();
+//	rearTruck->wheelRear->addContour(pt);
+//
+//	Contact *newContact = new Contact("Novo contato");
+//	newContact->connect(plateAAcontour,pt);
+//	newContact->setNormalForceLaw(new UnilateralConstraint());
+//	newContact->setNormalImpactLaw(new UnilateralNewtonImpact(0));
+//	newContact->setPlotFeature("generalizedForce",enabled);
+//	newContact->setPlotFeature("generalizedRelativePosition",enabled);
+//	addLink(newContact);
 
 
 	setPlotFeatureRecursive("generalizedPosition",enabled);
@@ -145,9 +186,6 @@ System::initializeFromFile(const string& inputFileName)
 	truckBaseDistance = atof(
 			searchParameter(inputFileName, "CAR_WHEEL_BASE").c_str());
 
-	/* TODO this implementation has no effect because wheelBase is being set
-	 *  internally in BarberTruck class
-	 */
 	truckWheelBase = atof(
 			searchParameter(inputFileName, "TRUCK_WHEEL_BASE").c_str());
 

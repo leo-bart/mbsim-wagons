@@ -235,8 +235,8 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 	sideFrameLeft->setFrameOfReference(this->getFrame("SF1"));
 	sideFrameLeft->setFrameForKinematics ( sideFrameLeft->getFrameC() );
 	sideFrameLeft->getFrameC()->enableOpenMBV();
-	sideFrameLeft->setTranslation( new LinearTranslation<VecV> ("[1,0;0,1;0,0]") );
-	sideFrameLeft->setRotation( new RotationAboutAxesXZ<VecV>() );
+	sideFrameLeft->setTranslation( new LinearTranslation<VecV> ("[1,0,0;0,1,0;0,0,1]") );
+	sideFrameLeft->setRotation( new RotationAboutAxesXYZ<VecV>() );
 
 	sideFrameLeft->setWindowAngle(angleSideframe);
 	sideFrameLeft->setWindowHeight(sideFrameHeight);
@@ -248,8 +248,8 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 	sideFrameRight->setFrameOfReference(this->getFrame("SF2"));
 	sideFrameRight->setFrameForKinematics ( sideFrameRight->getFrameC() );
 	sideFrameRight->getFrameC()->enableOpenMBV();
-	sideFrameRight->setTranslation( new LinearTranslation<VecV> ("[1,0;0,1;0,0]") );
-	sideFrameRight->setRotation( new RotationAboutAxesXZ<VecV>() );
+	sideFrameRight->setTranslation( new LinearTranslation<VecV> ("[1,0,0;0,1,0;0,0,1]") );
+	sideFrameRight->setRotation( new RotationAboutAxesXYZ<VecV>() );
 
 	sideFrameRight->setWindowAngle(angleSideframe);
 	sideFrameRight->setWindowHeight(sideFrameHeight);
@@ -280,21 +280,33 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 
 	/// ---------------- DEFINITION OF JOINTS -----------------------------------
 	/// TODO MOMENTS MOMENTS MOMENTS
-	//  Cylindrical joint rear wheelset-sideframe left
-	addLink(new RotaryJoint("Cylindrical Joint: left sideframe to rear wheelset",
+	///
+	///
+	SymMat wheelBoxStiffMatrix(6,INIT,0.0);
+	wheelBoxStiffMatrix(0,0) = 13134500; // longitudinal
+	wheelBoxStiffMatrix(2,2) = 8756300; // lateral
+	wheelBoxStiffMatrix(1,1) = 175127000; // vertical
+	wheelBoxStiffMatrix(4,4) = 55475; // yaw
+	wheelBoxStiffMatrix(3,3) = 55475; // roll
+
+	//  Wheelbox joint rear wheelset-sideframe left/
+	addLink(new WheelBox("Wheelbox: left sideframe to rear wheelset",
 			sideFrameLeft->getFrame("RL"),
-			wheelRear->getFrame("SFL")));
-	// Cylindrical joint front wheelset-sideframe left
-	addLink(new RotaryJoint("Cylindrical Joint: left sideframe to front wheelset",
-			sideFrameLeft->getFrame("RR"),wheelFront->getFrame("SFL")));
+			wheelRear->getFrame("SFL"), wheelBoxStiffMatrix));
+	// Wheelbox joint front wheelset-sideframe left
+	addLink(new WheelBox("Wheelbox: left sideframe to front wheelset",
+			sideFrameLeft->getFrame("RR"),wheelFront->getFrame("SFL"),
+			wheelBoxStiffMatrix));
 
-	//  Cylindrical joint rear wheelset-sideframe right
-	addLink(new RotaryJoint("Cylindrical Joint: right sideframe to rear wheelset",
-			sideFrameRight->getFrame("RL"),wheelRear->getFrame("SFR")));
+	//  Wheelbox joint rear wheelset-sideframe right
+	addLink(new WheelBox("Wheelbox: right sideframe to rear wheelset",
+			sideFrameRight->getFrame("RL"),wheelRear->getFrame("SFR"),
+			wheelBoxStiffMatrix));
 
-	// Cylindrical joint front wheelset-sideframe right
-	addLink(new RotaryJoint("Cylindrical Joint: right sideframe to front wheelset",
-			sideFrameRight->getFrame("RR"),wheelFront->getFrame("SFR")));
+	// Wheelbox joint front wheelset-sideframe right
+	addLink(new WheelBox("Wheelbox: right sideframe to front wheelset",
+			sideFrameRight->getFrame("RR"),wheelFront->getFrame("SFR"),
+			wheelBoxStiffMatrix));
 
 	/// ---------------- DEFINITION OF THE SPRINGS
 	///
@@ -459,21 +471,29 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 	/// ------------------------ DEFITION OF THE CONTACTS -----------------------
 
 	// Establish contacts
-	setWedgeContacts(wedge1->getContour("Left face"),bolster->getContour("Contact plane right"),
-			frictionCoefficient,coefRestitution);
-	setWedgeContacts(wedge1->getContour("Right face"),sideFrameRight->getContour("Side frame right"),frictionCoefficient,coefRestitution);
+	bool contacts=false;
+	if(contacts){
+		setWedgeContacts(wedge1->getContour("Left face"),bolster->getContour("Contact plane right"),
+				frictionCoefficient,coefRestitution);
+		setWedgeContacts(wedge1->getContour("Right face"),sideFrameRight->getContour("Side frame right"),
+				frictionCoefficient,coefRestitution);
 
-	setWedgeContacts(wedge2->getContour("Left face"),sideFrameRight->getContour("Side frame left"),frictionCoefficient,coefRestitution);
-	setWedgeContacts(wedge2->getContour("Right face"),bolster->getContour("Contact plane left"),
-			frictionCoefficient,coefRestitution);
+		setWedgeContacts(wedge2->getContour("Left face"),sideFrameRight->getContour("Side frame left"),
+				frictionCoefficient,coefRestitution);
+		setWedgeContacts(wedge2->getContour("Right face"),bolster->getContour("Contact plane left"),
+				frictionCoefficient,coefRestitution);
 
-	setWedgeContacts(wedge3->getContour("Left face"),bolster->getContour("Contact plane right"),
-			frictionCoefficient,coefRestitution);
-	setWedgeContacts(wedge3->getContour("Right face"),sideFrameLeft->getContour("Side frame right"),frictionCoefficient,coefRestitution);
-//
-	setWedgeContacts(wedge4->getContour("Left face"),sideFrameLeft->getContour("Side frame left"),frictionCoefficient,coefRestitution);
-	setWedgeContacts(wedge4->getContour("Right face"),bolster->getContour("Contact plane left"),
-			frictionCoefficient,coefRestitution);
+		setWedgeContacts(wedge3->getContour("Left face"),bolster->getContour("Contact plane right"),
+				frictionCoefficient,coefRestitution);
+		setWedgeContacts(wedge3->getContour("Right face"),sideFrameLeft->getContour("Side frame right"),
+				frictionCoefficient,coefRestitution);
+	//
+		setWedgeContacts(wedge4->getContour("Left face"),sideFrameLeft->getContour("Side frame left"),
+				frictionCoefficient,coefRestitution);
+		setWedgeContacts(wedge4->getContour("Right face"),bolster->getContour("Contact plane left"),
+				frictionCoefficient,coefRestitution);
+	}
+
 }
 
 // getWheelBase
@@ -555,7 +575,7 @@ void BarberTruck::setWedgeContacts(Contour *wedgeFace,
 		contact->setNormalForceLaw ( new UnilateralConstraint() );
 		contact->setNormalImpactLaw ( new UnilateralNewtonImpact ( coefRestitution ) );
 		contact->setTangentialImpactLaw ( new SpatialCoulombImpact ( frictionCoefficient ) );
-//		contact->setTangentialForceLaw ( new SpatialCoulombFriction ( frictionCoefficient ) );
+		contact->setTangentialForceLaw ( new SpatialCoulombFriction ( frictionCoefficient ) );
 		contact->setPlotFeature("generalizedForce",enabled);
 		contact->setPlotFeature("generalizedRelativePosition",enabled);
 		addLink(contact);

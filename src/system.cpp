@@ -116,24 +116,28 @@ System::System(const string& projectName, const string& inputFileName) :
 	frontTruck->setFrameOfReference(frontTruck->getFrame("FT_RefFrame"));
 	this->addGroup(frontTruck);
 
-//	position(0) = -truckBaseDistance / 2;
-//	BarberTruck *rearTruck = new BarberTruck("Rear truck", bolsterBushing, truckWheelBase);
-//	rearTruck->addFrame(new FixedRelativeFrame("RT_RefFrame",position,
-//			SqrMat(3,EYE)));
-//	rearTruck->setFrameOfReference(rearTruck->getFrame("RT_RefFrame"));
-//	this->addGroup(rearTruck);
+	position(0) = -truckBaseDistance / 2;
+	BarberTruck *rearTruck = new BarberTruck("Rear truck", bolsterBushing, truckWheelBase);
+	rearTruck->addFrame(new FixedRelativeFrame("RT_RefFrame",position,
+			SqrMat(3,EYE)));
+	rearTruck->setFrameOfReference(rearTruck->getFrame("RT_RefFrame"));
+	this->addGroup(rearTruck);
 	//
 	//
 	//	/// -------------- MOTION DEFINITION ----------------------------------------
 
+	double tSpeedMeterPerSec = trainSpeed / 3.6;
 	// front wheel, front truck = wheel 1
-	frontTruck->wheelRear->setTranslation(new Motion(freq,2*amplitude,t0,1));
+	frontTruck->wheelFront->setTranslation(new Motion(freq,2*amplitude,t0,2));
 	// rear wheel, front truck = wheel2
-	frontTruck->wheelFront->setTranslation(new Motion(freq,2*amplitude,t0+0.5,1));
+	frontTruck->wheelRear->setTranslation(new Motion(freq,2*amplitude,
+			t0+truckWheelBase/tSpeedMeterPerSec,2));
 	// front wheel, rear truck = wheel3
-//	frontTruck->sideFrame->setRotation(new CompositeFunction<RotMat3(double(double))>(
-//			new RotationAboutXAxis<double>(), new Angle(freq,3*amplitude,t0)));n
-//	rearTruck->wheelRear->setTranslation(new TranslationAlongAxesXYZ<VecV>());
+	rearTruck->wheelFront->setTranslation(new Motion(freq,2*amplitude,
+			t0+(truckBaseDistance-truckWheelBase)/tSpeedMeterPerSec,2));
+	// rear wheek, rear truck = wheel4
+	rearTruck->wheelRear->setTranslation(new Motion(freq,2*amplitude,
+			t0+(truckBaseDistance-truckWheelBase)/tSpeedMeterPerSec,2));
 
 
 
@@ -179,19 +183,14 @@ System::initializeFromFile(const string& inputFileName)
 {
 	amplitude = atof(searchParameter(inputFileName, "AMPLITUDE").c_str());
 
-	freq = atof(searchParameter(inputFileName, "FREQUENCY").c_str());
-
-	t0 = atof(searchParameter(inputFileName, "MOVEMENT_DELAY").c_str());
-
-	truckBaseDistance = atof(
-			searchParameter(inputFileName, "CAR_WHEEL_BASE").c_str());
-
-	truckWheelBase = atof(
-			searchParameter(inputFileName, "TRUCK_WHEEL_BASE").c_str());
-
-	wagonMass = atof(searchParameter(inputFileName, "BOX_MASS").c_str());
+	bolsterBushing = atof(
+				searchParameter(inputFileName, "BOLSTER_BUSHINGS").c_str());
 
 	fillRatio = atof(searchParameter(inputFileName, "FILL_RATIO").c_str());
+
+	freq = atof(searchParameter(inputFileName, "FREQUENCY").c_str());
+
+	wagonMass = atof(searchParameter(inputFileName, "BOX_MASS").c_str());
 
 	wagonInertiaTensor.resize(3);
 	wagonInertiaTensor.init(fmatvec::EYE);
@@ -202,8 +201,15 @@ System::initializeFromFile(const string& inputFileName)
 	wagonInertiaTensor(2, 2) = atof(
 			searchParameter(inputFileName, "BOX_Izz").c_str());
 
-	bolsterBushing = atof(
-			searchParameter(inputFileName, "BOLSTER_BUSHINGS").c_str());
+	t0 = atof(searchParameter(inputFileName, "MOVEMENT_DELAY").c_str());
+
+	trainSpeed = atof(searchParameter(inputFileName, "INITIAL_TRAIN_VELOCITY").c_str());
+
+	truckBaseDistance = atof(
+			searchParameter(inputFileName, "CAR_WHEEL_BASE").c_str());
+
+	truckWheelBase = atof(
+			searchParameter(inputFileName, "TRUCK_WHEEL_BASE").c_str());
 
 	return 0;
 }

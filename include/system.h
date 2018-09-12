@@ -89,6 +89,7 @@ private:
   double fillRatio; // amount of fluid in the box for the case of liquid cargo [0-1]
   fmatvec::SymMat wagonInertiaTensor; // [kg.m^2]
   bool bolsterBushing; // whether the bolster connections are modelled using 3d-stiffness
+  double trainSpeed; // train initial speed in km/h
   
   /// \brief Get input data from text file
   /// \param inputFileName string containing the name of the input file

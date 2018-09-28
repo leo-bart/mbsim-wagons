@@ -38,6 +38,8 @@ int main(int argc, char** argv)
   // settings
  double endTime = atof(searchParameter(inputFileNames[0],"SIMULATION_TIME").c_str());
  double timeStep = atof(searchParameter(inputFileNames[0],"TIME_STEP").c_str());
+ double outputFrequencyInHertz =
+		 atof(searchParameter(inputFileNames[0],"OUTPUT_FREQHZ").c_str());
 
  // build single modules
  DynamicSystemSolver *sys1 = new System(searchParameter(inputFileNames[0],"SYSTEM_NAME"),inputFileNames[0]);
@@ -48,21 +50,21 @@ int main(int argc, char** argv)
  sys1->setFlushEvery(250);
  sys1->initialize();
  sys1->setStopIfNoConvergence(false,true);
- sys1->setMaxIter(2000);
+ sys1->setMaxIter(1e5);
  sys1->setGeneralizedImpulseTolerance(1e-6);
  sys1->setGeneralizedForceTolerance(1e-6);
  sys1->setGeneralizedRelativePositionTolerance(5e-6);
  sys1->setGeneralizedRelativeVelocityTolerance(8e-2);
 
- MBSimIntegrator::TimeSteppingIntegrator integrator;
-// integrator.setRelativeTolerance(1e-7);
-// integrator.setAbsoluteTolerance(1e-6);
-// integrator.setInitialStepSize(timeStep);
+ MBSimIntegrator::TimeSteppingSSCIntegrator integrator;
+ integrator.setRelativeTolerance(1e-7);
+ integrator.setAbsoluteTolerance(1e-6);
+ integrator.setInitialStepSize(timeStep);
  integrator.setEndTime(endTime);
- integrator.setPlotStepSize(endTime/500);
- integrator.setStepSize(timeStep);
-// integrator.setStepSizeMax(1e-4);
-// integrator.setStepSizeMin(1e-8);
+ integrator.setPlotStepSize(1/outputFrequencyInHertz);
+// integrator.setStepSize(timeStep);
+ integrator.setStepSizeMax(1e-4);
+ integrator.setStepSizeMin(1e-10);
  integrator.integrate(*sys1);
  cout << "finished" << endl;
  cout << timeStep << endl;

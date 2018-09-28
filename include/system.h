@@ -61,6 +61,7 @@ using namespace std;
 #include "wheelset.h"
 #include "sinusoidalmovement.h"
 #include "inputTools.h"
+#include "jointFactory.h"
 /*
  * This object is not included in the mbsim 11.0 official distribution,
  * so it was added individually
@@ -83,6 +84,7 @@ private:
   double amplitude;	// movement amplitude [m]
   double freq;	// movement angular speed [rad/s]
   double t0;	// movement delay to enter [s]
+  double period; // movement duration
   double truckBaseDistance; // car wheel base [m]
   double truckWheelBase; // truck wheel base [m]
   double wagonMass; // wagon box mass [kg]

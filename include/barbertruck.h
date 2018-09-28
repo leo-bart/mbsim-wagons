@@ -29,6 +29,7 @@
 #include "wheelset.h"
 #include "jointFactory.h"
 #include "wheelBox.h"
+#include "bushing.h"
 #include "mbsim/objects/rigid_body.h"
 #include "mbsim/links/joint.h"
 #include "mbsim/links/spring_damper.h"
@@ -62,6 +63,7 @@
 #endif
 
 #include <iostream>
+#include <stdlib.h>
 
 using namespace MBSim;
 using namespace fmatvec;

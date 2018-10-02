@@ -40,7 +40,7 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 	double wedgeDepth = 0.12; // [m]
 	double wedgeSpringVerticalStiffness = 393046; // [N/m]
 	double wedgeSpringShearStiffness = 118870;  // [N/m]
-	double wedgeSpringFreeLength = 0.2544; // [m]
+	double wedgeSpringFreeLength = 0.28; // [m]
 	/// bolster properties
 	double bolsterWidth = 0.41; // taken at the widest part [m]
 	double bolsterHeight = .19; // [m]
@@ -149,6 +149,7 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 
 	/// ---------------- DEFINITION OF THE WEDGES -------------------------------
 
+	VecV translationDirection(3,INIT,0.0);
 	// Wedge 2
 	wedge2->setMass ( wedgeMass );
 	Vec wedgeAngles ( 2,INIT,0.0 );
@@ -162,8 +163,10 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 	wedge2->setFrameOfReference ( bolster->getFrame ( "W2" ) );
 	wedge2->setFrameForKinematics ( wedge2->getFrame ( "C" ) );
 	wedge2->getFrame ( "C" )->enableOpenMBV();
-	wedge2->setTranslation ( new MBSim::LinearTranslation<VecV> (  ( "[1,0;0,1;0,0]" ) ) );
-	wedge2->setRotation ( new RotationAboutZAxis<VecV>() );
+	translationDirection(0) = -sin(wedgeAngles(0));
+	translationDirection(1) = cos(wedgeAngles(0));
+	wedge2->setTranslation ( new LinearTranslation<VecV> ( translationDirection  ) );
+	//	wedge2->setRotation ( new RotationAboutZAxis<VecV>() );
 	wedge2->enableOpenMBV ( true );
 
 	// Wedge 4
@@ -176,8 +179,8 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 	wedge4->setFrameOfReference ( bolster->getFrame ( "W4" ) );
 	wedge4->setFrameForKinematics ( wedge4->getFrame ( "C" ) );
 	wedge4->getFrame ( "C" )->enableOpenMBV();
-	wedge4->setTranslation ( new MBSim::LinearTranslation<VecV> (  ( "[1,0;0,1;0,0]" ) ) );
-	wedge4->setRotation ( new RotationAboutZAxis<VecV>() );
+	wedge4->setTranslation ( new LinearTranslation<VecV> ( translationDirection  ) );
+	//	wedge4->setRotation ( new RotationAboutZAxis<VecV>() );;
 	wedge4->enableOpenMBV ( true );
 
 	// Wedge 1
@@ -192,8 +195,10 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 	wedge1->setFrameOfReference ( bolster->getFrame ( "W1" ) );
 	wedge1->setFrameForKinematics ( wedge1->getFrame ( "C" ) );
 	wedge1->getFrame ( "C" )->enableOpenMBV();
-	wedge1->setTranslation ( new LinearTranslation<VecV> ( "[1,0;0,1;0,0]"  ) );
-	wedge1->setRotation ( new RotationAboutZAxis<VecV>() );
+	translationDirection(0) = sin(wedgeAngles(1));
+	translationDirection(1) = cos(wedgeAngles(1));
+	wedge1->setTranslation ( new LinearTranslation<VecV> ( translationDirection  ) );
+//	wedge1->setRotation ( new RotationAboutZAxis<VecV>() );
 	wedge1->enableOpenMBV ( true );
 
 	// Wedge 3
@@ -206,8 +211,8 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 	wedge3->setFrameOfReference ( bolster->getFrame ( "W3" ) );
 	wedge3->setFrameForKinematics ( wedge3->getFrame ( "C" ) );
 	wedge3->getFrame ( "C" )->enableOpenMBV();
-	wedge3->setTranslation ( new LinearTranslation<VecV> ( "[1,0;0,1;0,0]"  ) );
-	wedge3->setRotation ( new RotationAboutZAxis<VecV>() );
+	wedge3->setTranslation ( new LinearTranslation<VecV> ( translationDirection  ) );
+	//	wedge3->setRotation ( new RotationAboutZAxis<VecV>() );
 	wedge3->enableOpenMBV ( true );
 
 
@@ -519,23 +524,27 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 	/// ------------------------ DEFITION OF THE CONTACTS -----------------------
 
 	// Establish contacts
-	bool contacts=false;
-	if(contacts){
-		setWedgeContacts(wedge1->getContour("Left face"),bolster->getContour("Contact plane right"),
-				frictionCoefficient,coefRestitution);
+	bool contactsSideframe=false;
+	bool contactsBolster=false;
+
+
+	if(contactsSideframe){
 		setWedgeContacts(wedge1->getContour("Right face"),sideFrameRight->getContour("Side frame right"),
 				frictionCoefficient,coefRestitution);
 		setWedgeContacts(wedge2->getContour("Left face"),sideFrameRight->getContour("Side frame left"),
 				frictionCoefficient,coefRestitution);
-		setWedgeContacts(wedge2->getContour("Right face"),bolster->getContour("Contact plane left"),
-				frictionCoefficient,coefRestitution);
-
-		setWedgeContacts(wedge3->getContour("Left face"),bolster->getContour("Contact plane right"),
-				frictionCoefficient,coefRestitution);
 		setWedgeContacts(wedge3->getContour("Right face"),sideFrameLeft->getContour("Side frame right"),
 				frictionCoefficient,coefRestitution);
-	//
 		setWedgeContacts(wedge4->getContour("Left face"),sideFrameLeft->getContour("Side frame left"),
+				frictionCoefficient,coefRestitution);
+	}
+
+	if(contactsBolster){
+		setWedgeContacts(wedge1->getContour("Left face"),bolster->getContour("Contact plane right"),
+				frictionCoefficient,coefRestitution);
+		setWedgeContacts(wedge2->getContour("Right face"),bolster->getContour("Contact plane left"),
+				frictionCoefficient,coefRestitution);
+		setWedgeContacts(wedge3->getContour("Left face"),bolster->getContour("Contact plane right"),
 				frictionCoefficient,coefRestitution);
 		setWedgeContacts(wedge4->getContour("Right face"),bolster->getContour("Contact plane left"),
 				frictionCoefficient,coefRestitution);
@@ -619,8 +628,8 @@ void BarberTruck::setWedgeContacts(Contour *wedgeFace,
 		contact = new Contact ( contactName.str() );
 		contact->connect ( dynamic_cast<MBSim::CompoundContour*>(wedgeFace)->getContour(i),
 				otherFace );
-		contact->setNormalForceLaw ( new UnilateralConstraint() );
-		contact->setNormalImpactLaw ( new UnilateralNewtonImpact ( coefRestitution ) );
+		contact->setNormalForceLaw ( new UnilateralConstraint );
+		contact->setNormalImpactLaw ( new UnilateralNewtonImpact ( 0 ) );
 		contact->setTangentialImpactLaw ( new SpatialCoulombImpact ( frictionCoefficient ) );
 		contact->setTangentialForceLaw ( new SpatialCoulombFriction ( frictionCoefficient ) );
 		contact->setPlotFeature("generalizedForce",enabled);

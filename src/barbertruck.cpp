@@ -457,11 +457,12 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 					stiffnessMatrix(5,0) = 1123.0811;	stiffnessMatrix(5,1) = -1733.2593;	stiffnessMatrix(5,2) = 560.3736;
 						stiffnessMatrix(5,3) = 42.5446;			stiffnessMatrix(5,4) = 13.6357;	stiffnessMatrix(5,5) = 4717.9090;
 
-					// Random rotation matrix
-					// the stiffness matrix above should be rotated by a random angle to prevent
-					// assymetries
-					srand(time(NULL));
-					double phi = ( rand() % 6280 ) / 1000.0;
+					// rotate the sitffness matrix phi around the axial axis
+					// each side frame has a different phi, so that forces tend to cancel each other on the abscence
+					// of external excitation.
+					double phi;
+					if (k == 0 ) phi = 0;
+					if (k == 1 ) phi = M_PI;
 					SqrMat3 rotateY = BasicRotAIKy(phi);
 					SymMat randomRotationMatrix (6,EYE);
 					for (unsigned ri=0;ri<=2;ri++){

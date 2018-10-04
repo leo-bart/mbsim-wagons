@@ -160,7 +160,7 @@ System::System(const string& projectName, const string& inputFileName) :
 
 	SymMatV centerPlateDamping(6,INIT,0.0);
 	centerPlateDamping = centerPlateStiffness * 0.004;
-	centerPlateDamping(4,4) = 700e3;
+	//centerPlateDamping(4,4) = 700e3;
 
 	ElasticJoint *frontPlate = new ElasticJoint("Front connection plate");
 	frontPlate->setForceDirection("[1,0,0;0,1,0;0,0,1]");
@@ -203,7 +203,7 @@ System::System(const string& projectName, const string& inputFileName) :
 			5/tSpeedMeterPerSec,2));
 	// front wheel, rear truck = wheel3
 	rearTruck->wheelFront->setTranslation(new Motion(freq,amplitude,
-			t0+(truckBaseDistance-truckWheelBase)/tSpeedMeterPerSec,
+			t0+(truckBaseDistance)/tSpeedMeterPerSec,
 			5/tSpeedMeterPerSec,2));
 	// rear wheek, rear truck = wheel4
 	rearTruck->wheelRear->setTranslation(new Motion(freq,amplitude,

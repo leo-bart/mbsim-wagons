@@ -42,8 +42,12 @@ namespace MBSim {
 class ProfileContour : public MBSim::RigidContour {
 public:
 
-	ProfileContour(const std::string& name="", const std::string& file_="", bool solid_=true, Frame* R=0) :
-		RigidContour(name,R), file(file_) { readInputFile(); }
+	ProfileContour(const std::string& name="", const std::string& file_="",
+			bool cw_ = false, bool solid_=true, Frame* R=0) :
+		RigidContour(name,R), file(file_), cw(cw_) {
+		readInputFile();
+		setConvexIndexes();
+	}
 
 	/* INHERITED INTERFACE OF ELEMENT */
 	std::string getType() const { return "Profile Contour"; }
@@ -62,22 +66,32 @@ public:
 	void setFile(std::string& filePath_);
 	double getNumberOfPoints(){return numberOfPoints;}
 	fmatvec::MatVx2 getPoints() {return points;}
+	fmatvec::MatVx2 getConvexSetIndexes() {return convexSetIndexes; }
 
 	// void setSolid(bool solid_=true) { solid = solid_; }
 	// bool getSolid() const { return solid; }
 	/***************************************************/
 
-//	BOOST_PARAMETER_MEMBER_FUNCTION( (void), enableOpenMBV, tag, (optional (diffuseColor,(const fmatvec::Vec3&),"[-1;1;1]")(transparency,(double),0))) {
-//		OpenMBVRotation ombv(points,diffuseColor,transparency);
-//		openMBVRigidBody=ombv.createOpenMBV();
-//	}
+
+	//	BOOST_PARAMETER_MEMBER_FUNCTION( (void), enableOpenMBV, tag, (optional (diffuseColor,(const fmatvec::Vec3&),"[-1;1;1]")(transparency,(double),0))) {
+	//		OpenMBVRotation ombv(points,diffuseColor,transparency);
+	//		openMBVRigidBody=ombv.createOpenMBV();
+	//	}
 
 	// virtual void initializeUsingXML(xercesc::DOMElement *element);
 
 
 	void readInputFile();
 
+
+
 protected:
+
+	/**
+	 * \brief a matrix that contains the first and last indexes
+	 * of the convex subsets of the profile.
+	 **/
+	fmatvec::MatVx2 convexSetIndexes;
 
 
 	/**
@@ -90,16 +104,29 @@ protected:
 	 */
 	fmatvec::MatVx2 points;
 
-
-private:
-/**
+	/**
 	 * \brief name of the input file with the data points
 	 */
 	std::string file;
+
+	/**
+	 * \brief setConvexIndexes sets the variable convexSetIndexes by
+	 * checking the convexity of consecutive lines inside the profile
+	 * \param clockwise This flag must be true if the profile inner
+	 * orientation is supposed to be clockwise. By default the algorithm searches
+	 * for convex sets counter-clockwisely.
+	 */
+public :
+	void setConvexIndexes();
+
+
+private:
+
 	bool solid;
-
-
-
+	/**
+	 * true if the profile is supposed to be closed clockwise
+	 */
+	bool cw;
 
 };
 

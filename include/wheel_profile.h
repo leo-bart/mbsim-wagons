@@ -58,7 +58,7 @@ public:
 class WheelProfile: public ProfileContour {
 public:
 	WheelProfile(const std::string& name, const std::string& file_="", Frame* R=0) :
-		ProfileContour(name,file_,true,R) { readInputFile(); }
+		ProfileContour(name,file_,false,true,R) {  }
 
 	/* INHERITED INTERFACE OF ELEMENT */
 	std::string getType() const { return "Wheel Profile Contour"; }

@@ -63,6 +63,7 @@ using namespace std;
 #include "inputTools.h"
 #include "jointFactory.h"
 #include "rail_profile.h"
+#include "wheel_rail.h"
 /*
  * This object is not included in the mbsim 11.0 official distribution,
  * so it was added individually

@@ -30,6 +30,12 @@ public:
 	 */
 	void enableOpenMBV();
 
+	/*
+	 * GETTERS AND SETTERS
+	 */
+	MBSim::WheelProfile* getLeftWheel() { return wheelLeft; };
+	MBSim::WheelProfile* getRightWheel() { return wheelRight; };
+
 protected:
 	double track;
 	double sideframeTrack;

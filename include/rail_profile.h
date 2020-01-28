@@ -30,13 +30,46 @@
 namespace MBSim {
 
 
+struct railData{
+	double x,y,z;
+	/*
+	 * \brief track cant angle
+	 */
+	double su;
+	/*
+	 * \brief lateral offset
+	 */
+	double deltay;
+	/*
+	 * \brief vertical offset
+	 */
+	double deltaz;
+	/*
+	 * \brief rail camber
+	 */
+	double camberLeft;
+};
+
+/**
+ * \brief Class that contains information related to global rail topological data
+ */
+class RailTopology{
+public:
+	RailTopology() : nominalGauge(1.0) {};
+private:
+	double nominalGauge;
+	std::string filePath;
+
+};
+
+
 /**
  * \brief A class that creates a two-dimensional profile for rail from a point map
  */
 class RailProfile: public ProfileContour {
 public:
 	RailProfile(const std::string &name, const std::string &file_, Frame *R=0) :
-		ProfileContour(name, file_,R) { readInputFile(); }
+		ProfileContour(name, file_,true, true, R) { }
 
 	/* INHERITED INTERFACE OF ELEMENT */
 	std::string getType() const { return "Rail Profile Contour"; }
@@ -57,7 +90,15 @@ private:
 	 * \brief PolygonPoint map with the profile points
 	 */
 	std::shared_ptr<std::vector<std::shared_ptr<OpenMBV::PolygonPoint>>> configurePoints();
+
+	/**
+	 * \brief The rail topological data
+	 */
+	RailTopology* topology;
 };
+
+
+
 
 } /* namespace MBSim */
 

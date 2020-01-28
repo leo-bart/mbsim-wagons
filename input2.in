@@ -19,5 +19,5 @@ BOX_Iyaw=989226.0
 FILL_RATIO=1.0
 WAGON_TYPE=0
 %===================== OTHER CONTROLS ========================================%
-FRICTION_COEFF=0.2
+FRICTION_COEFF=0.4
 BOLSTER_BUSHINGS=1

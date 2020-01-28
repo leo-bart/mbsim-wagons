@@ -130,9 +130,24 @@ System::System(const string& projectName, const string& inputFileName) :
 
 	/// ----------------------------- RAIL ------------------------------------------
 	///
-	RailProfile *rail = new RailProfile("Rail profile","tr68.dat");
-	rail->enableOpenMBV();
-	addContour(rail);
+
+	position(0) = 0;
+	position(1) = -0.672;
+	position(2) = - (0.8 + 0.03681); //0.03681 corrects the gauge distance
+
+	RailProfile *leftRail = new RailProfile("Left rail profile","tr68.dat");
+	addFrame(new FixedRelativeFrame("Left rail frame",position,"[0,0,1;0,1,0;1,0,0]"));
+	leftRail->setFrameOfReference(getFrame("Left rail frame"));
+	leftRail->enableOpenMBV();
+	addContour(leftRail);
+
+	position(2) = - position(2);
+
+	RailProfile *rightRail = new RailProfile("Right rail profile","tr68.dat");
+	addFrame(new FixedRelativeFrame("Right rail frame",position,"[0,0,-1;0,1,0;-1,0,0"));
+	rightRail->setFrameOfReference(getFrame("Right rail frame"));
+	rightRail->enableOpenMBV();
+	addContour(rightRail);
 
 	/// --------------------------- WAGONBOX ----------------------------------------
 	///
@@ -190,15 +205,34 @@ System::System(const string& projectName, const string& inputFileName) :
 	addLink(rearPlate);
 
 
+	/// -------------- WHEEL-RAIL CONTACT --------------------------------------
+
+	Contact* wheelRail = new Contact("Wheel Rail");
+	wheelRail->connect(leftRail,frontTruck->wheelFront->getLeftWheel());
+	wheelRail->setNormalForceLaw(new UnilateralConstraint);
+	addLink(wheelRail);
+
+//	ContactObserver *observer = new ContactObserver(std::string("Wheel rail contact"));
+//	observer->setContact(wheelRail);
+//	observer->enableOpenMBVContactPoints(_size=0.05);
+//	observer->enableOpenMBVNormalForce(_size=0.05);
+//	observer->enableOpenMBVTangentialForce(_size=0.05);
+//	addObserver(observer);
+
+	wheelRail->setPlotFeature("generalizedForce",enabled);
+	wheelRail->setPlotFeature("generalizedRelativePosition",enabled);
+
 	/// -------------- MOTION DEFINITION ----------------------------------------
 
 	double tSpeedMeterPerSec = trainSpeed / 3.6;
 	double period = 5/tSpeedMeterPerSec;
 	if (tfinal == 0) period = 1e3;
 	else period = tfinal;
+
 	// front wheel, front truck = wheel 1
-	frontTruck->wheelFront->setTranslation(new Motion(freq,amplitude,t0,
-			period,2));
+//	frontTruck->wheelFront->setTranslation(new Motion(freq,amplitude,t0,
+//			period,2));
+	frontTruck->wheelFront->setTranslation(new LinearTranslation<VecV> ("[1,0,0;0,1,0;0,0,1]"));
 	// rear wheel, front truck = wheel2
 	frontTruck->wheelRear->setTranslation(new Motion(freq,amplitude,
 			t0+truckWheelBase/tSpeedMeterPerSec,

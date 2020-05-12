@@ -76,17 +76,17 @@ void ProfileContour::setFile(std::string& filePath_) {
 	readInputFile();
 }
 
-void ProfileContour::init(InitStage stage) {
+void ProfileContour::init(InitStage stage, const InitConfigSet &config) {
 	if(stage==preInit) {
 		//sign = solid?1:-1;
 		readInputFile();
 	}
 	else if(stage==plotting) {
-		if(plotFeature[openMBV]==enabled && openMBVRigidBody) {
+		if(plotFeature[openMBV] && openMBVRigidBody) {
 
 		}
 	}
-	RigidContour::init(stage);
+	RigidContour::init(stage, config);
 }
 
 
@@ -139,5 +139,3 @@ void ProfileContour::setConvexIndexes() {
 }
 
 } /* namespace MBSim */
-
-

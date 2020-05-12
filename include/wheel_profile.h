@@ -34,7 +34,7 @@ namespace MBSim {
  * Class OpenMBVRotation
  * Implemented because the openmbv_util.h did not implement this
  */
-class OpenMBVRotation : public OpenMBVDynamicColoredBody {
+class OpenMBVRotation : public OpenMBVColoredBody {
 protected:
 	/**
 	 * \brief Points in format (x,y).
@@ -43,7 +43,7 @@ protected:
 	std::shared_ptr<std::vector<std::shared_ptr<OpenMBV::PolygonPoint>>> points;
 public:
 	OpenMBVRotation(fmatvec::MatVx2 points_,const fmatvec::Vec3 &dc="[-1;1;1]", double tp=0) :
-		OpenMBVDynamicColoredBody(dc,tp), points2d(points_) {}
+		OpenMBVColoredBody(dc,tp), points2d(points_) {}
 	void initializeUsingXML(xercesc::DOMElement *element);
 	void initializeObject(const std::shared_ptr<OpenMBV::Rotation> &object);
 	/**
@@ -62,7 +62,7 @@ public:
 
 	/* INHERITED INTERFACE OF ELEMENT */
 	std::string getType() const { return "Wheel Profile Contour"; }
-	virtual void init(InitStage stage);
+	virtual void init(InitStage stage, const InitConfigSet &config);
 	/***************************************************/
 
 	/* INHERITED INTERFACE OF CONTOUR */

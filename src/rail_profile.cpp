@@ -31,7 +31,7 @@ void RailProfile::init(InitStage stage) {
 		readInputFile();
 	}
 	else if(stage==plotting) {
-		if(plotFeature[openMBV]==enabled && openMBVRigidBody) {
+		if(plotFeature[openMBV]==true && openMBVRigidBody) {
 
 		}
 	}

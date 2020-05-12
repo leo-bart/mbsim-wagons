@@ -9,9 +9,10 @@
 #define WHEELSET_H_
 
 #include <string>
-#include <mbsim/objects/rigid_body.h>
+#include "mbsim/objects/rigid_body.h"
 #include "mbsim/frames/fixed_relative_frame.h"
 #include "openmbvcppinterface/rotation.h"
+#include "openmbvcppinterface/frustum.h"
 #include "openmbvcppinterface/compoundrigidbody.h"
 #include "openmbvcppinterface/ivbody.h"
 #include "wheel_profile.h"

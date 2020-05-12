@@ -51,7 +51,7 @@ public:
 
 	/* INHERITED INTERFACE OF ELEMENT */
 	std::string getType() const { return "Profile Contour"; }
-	virtual void init(InitStage stage);
+	virtual void init(InitStage stage, const InitConfigSet &config);
 	/***************************************************/
 
 	/* INHERITED INTERFACE OF CONTOUR */

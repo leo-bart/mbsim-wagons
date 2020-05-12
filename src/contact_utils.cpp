@@ -26,7 +26,7 @@
  * wheel-rail contact
  */
 
-#include <config.h>
+//#include <config.h>
 #include "mbsim/utils/contact_utils.h"
 #include "stdio.h"
 
@@ -186,6 +186,3 @@ namespace MBSim {
       return 0;
   }
 }
-
-
-

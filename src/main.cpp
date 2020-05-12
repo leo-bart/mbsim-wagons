@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   main.cpp
  * Author: lbb
  *
@@ -24,8 +24,8 @@
 using namespace std;
 using namespace MBSim;
 
-/* 
- * 
+/*
+ *
  */
 int main(int argc, char** argv)
 {
@@ -47,26 +47,26 @@ int main(int argc, char** argv)
 	DynamicSystemSolver *sys1 = new System(searchParameter(inputFileNames[0],"SYSTEM_NAME"),inputFileNames[0]);
 
 	// add modules to overall dynamic system
-	sys1->setConstraintSolver(DynamicSystemSolver::FixedPointSingle);
-	sys1->setImpactSolver(DynamicSystemSolver::FixedPointSingle);
+	sys1->setConstraintSolver(DynamicSystemSolver::fixedpoint);
+	sys1->setImpactSolver(DynamicSystemSolver::fixedpoint);
 	sys1->setFlushEvery(250);
 	sys1->initialize();
 	sys1->setStopIfNoConvergence(false,true);
-	sys1->setMaxIter(1e5);
+	sys1->setMaximumIterations(1e5);
 	sys1->setGeneralizedImpulseTolerance(1e-6);
 	sys1->setGeneralizedForceTolerance(1e-6);
 	sys1->setGeneralizedRelativePositionTolerance(5e-6);
 	sys1->setGeneralizedRelativeVelocityTolerance(8e-2);
 
-	MBSimIntegrator::TimeSteppingSSCIntegrator integrator;
+	TimeSteppingSSCIntegrator integrator;
 	integrator.setRelativeTolerance(1e-7);
 	integrator.setAbsoluteTolerance(1e-6);
 	integrator.setInitialStepSize(timeStep);
 	integrator.setEndTime(endTime);
 	integrator.setPlotStepSize(1/outputFrequencyInHertz);
 	// integrator.setStepSize(timeStep);
-	integrator.setStepSizeMax(5e-3);
-	integrator.setStepSizeMin(1e-10);
+	integrator.setMaximumStepSize(5e-3);
+	integrator.setMinimumStepSize(1e-10);
 	integrator.integrate(*sys1);
 	cout << "finished" << endl;
 	cout << timeStep << endl;

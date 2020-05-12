@@ -79,7 +79,9 @@ public:
 	BOOST_PARAMETER_MEMBER_FUNCTION( (void), enableOpenMBV, tag, (optional (diffuseColor,(const fmatvec::Vec3&),"[-1;1;1]")(transparency,(double),0))) {
 		std::shared_ptr<OpenMBV::Extrusion> ombv =
 				OpenMBV::ObjectFactory::create<OpenMBV::Extrusion>();
-		ombv->setDiffuseColor(diffuseColor(0),diffuseColor(1),diffuseColor(2));
+		// TODO: acertar colorização do trilho. Por algum motivo o compilador
+		// esté reclamando que o diffuseColor não pode ser usado como função
+		//ombv->setDiffuseColor(diffuseColor(0),diffuseColor(1),diffuseColor(2));
 		ombv->setHeight(1.0);
 		ombv->addContour(configurePoints());
 		openMBVRigidBody = ombv;

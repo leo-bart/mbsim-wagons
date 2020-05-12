@@ -58,7 +58,7 @@ namespace MBSim {
       virtual void updatewb(fmatvec::Vec &wb, double g, std::vector<ContourFrame*> &cFrame);
       /***************************************************/
 
-      void findContactPoints(std::vector<ContourFrame*>& cFrame);
+      void findContactPoints(MatVx2 wheelProfilePoints, MatVx2 railProfilePoints);
 
     private:
       /**
@@ -75,7 +75,7 @@ namespace MBSim {
       /**
        * \brief Implementation of the Minkowski sum
        */
-      fmatvec::MatVx2 minkowskiSum(fmatvec::MatVx2 A, fmatvec::MatVx2 B);
+      fmatvec::MatVx2 minkowskiSum(fmatvec::MatVx2 A, fmatvec::MatVx2 B, MatVx2I& idxmap);
 
       /**
        * \brief Implementation of GJK distance algorithm according to

@@ -338,16 +338,16 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 
 	std::string wedgeSpringNameRoot("Wedge_spring_");
 
-	sideFrameLeft->addFrame(new FixedRelativeFrame(wedgeSpringNameRoot + toStr(1),
+	sideFrameLeft->addFrame(new FixedRelativeFrame(wedgeSpringNameRoot + to_string(1),
 			relativePosition,SqrMat(3,EYE)));
 	relativePosition(0) = - relativePosition(0);
-	sideFrameLeft->addFrame(new FixedRelativeFrame(wedgeSpringNameRoot + toStr(2),
+	sideFrameLeft->addFrame(new FixedRelativeFrame(wedgeSpringNameRoot + to_string(2),
 			relativePosition,SqrMat(3,EYE)));
 	relativePosition(2) = 0;
-	sideFrameLeft->addFrame(new FixedRelativeFrame(wedgeSpringNameRoot + toStr(4),
+	sideFrameLeft->addFrame(new FixedRelativeFrame(wedgeSpringNameRoot + to_string(4),
 			relativePosition,SqrMat(3,EYE)));
 	relativePosition(0) = - relativePosition(0);
-	sideFrameLeft->addFrame(new FixedRelativeFrame(wedgeSpringNameRoot + toStr(3),
+	sideFrameLeft->addFrame(new FixedRelativeFrame(wedgeSpringNameRoot + to_string(3),
 			relativePosition,SqrMat(3,EYE)));
 
 	relativePosition = 0. * relativePosition;
@@ -380,9 +380,9 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 
 	// Spring group connecting right wedge to sideframe
 	for (unsigned int i = 1; i <= 4; i++){
-		ElasticJoint *springWedge = new ElasticJoint ( "Spring-Wedge-" + toStr(i) );
-		springWedge->connect ( sideFrameLeft->getFrame ( wedgeSpringNameRoot + toStr(i) ),
-				dynamic_cast<RigidBody*>(getObject("Wedge " + toStr(i)))->getFrame ( wedgeSpringNameRoot) );
+		ElasticJoint *springWedge = new ElasticJoint ( "Spring-Wedge-" + to_string(i) );
+		springWedge->connect ( sideFrameLeft->getFrame ( wedgeSpringNameRoot + to_string(i) ),
+				dynamic_cast<RigidBody*>(getObject("Wedge " + to_string(i)))->getFrame ( wedgeSpringNameRoot) );
 		springWedge->setForceDirection("[1,0,0;0,1,0;0,0,1]");
 		springWedge->setGeneralizedForceFunction(wedgeSpringLaw);
 		this->addLink ( springWedge );
@@ -416,8 +416,8 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 				// therefore, springs on position 02 and 12 don't exist
 				if ( j == 0 || j == 1) this->addLink(springBolster);
 				else if ( i == 2) this->addLink(springBolster);
-				springBolster->setPlotFeature("generalizedForce", enabled);
-				springBolster->setPlotFeature("deflection",enabled);
+				springBolster->setPlotFeature(generalizedForce, true);
+				springBolster->setPlotFeature(deflection,true);
 
 				// IF ELASTIC CONNECTIONS
 
@@ -511,9 +511,9 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 //							dummyFrame);
 					if ( j == 0 || j == 1) this->addLink(bushingBolster);
 					else if ( i == 2) this->addLink(bushingBolster);
-					bushingBolster->setPlotFeatureRecursive("generalizedForce", enabled);
-					bushingBolster->setPlotFeatureRecursive("generalizedRelativePosition",enabled);
-					bushingBolster->setPlotFeatureRecursive("generalizedRelativeVelocity",enabled);
+					bushingBolster->setPlotFeatureRecursive(generalizedForce, true);
+					bushingBolster->setPlotFeatureRecursive(generalizedRelativePosition,true);
+					bushingBolster->setPlotFeatureRecursive(generalizedRelativeVelocity,true);
 				}
 			}
 		}
@@ -631,8 +631,8 @@ void BarberTruck::setWedgeContacts(Contour *wedgeFace,
 		contact->setNormalImpactLaw ( new UnilateralNewtonImpact ( 0 ) );
 		contact->setTangentialImpactLaw ( new SpatialCoulombImpact ( frictionCoefficient ) );
 		contact->setTangentialForceLaw ( new SpatialCoulombFriction ( frictionCoefficient ) );
-		contact->setPlotFeature("generalizedForce",enabled);
-		contact->setPlotFeature("generalizedRelativePosition",enabled);
+		contact->setPlotFeature(generalizedForce,true);
+		contact->setPlotFeature(generalizedRelativePosition,true);
 		addLink(contact);
 
 		if (observerActive)
@@ -646,6 +646,3 @@ void BarberTruck::setWedgeContacts(Contour *wedgeFace,
 		}
 	}
 }
-
-
-

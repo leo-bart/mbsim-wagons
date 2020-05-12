@@ -18,11 +18,11 @@ BUILDDIR = build
 SRCDIR = src
 
 # Do not edit the following lines
-CXX = g++-4.8
-libsources = 
+CXX = g++
+libsources =
 objects = $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(sources:.$(SRCEXT)=.o))
 CPPFLAGS= -m64 -g3 -std=c++11 -Wall -Wfatal-errors -Werror -Wno-unknown-pragmas -fopenmp \
-`pkg-config --cflags mbsim`
+`pkg-config --cflags mbsim` -I/usr/include/hdf5/serial
 #CPPFLAGS= -g3 -m64 -std=c++11 -Wall -D_GLIBCXX_USE_CXX11_ABI=0 -Wfatal-errors -Werror -Wno-unknown-pragmas -fopenmp \
 `pkg-config --cflags mbsim`
 #`$(mbsimdir)/bin/mbsim-config --cflags`
@@ -36,14 +36,14 @@ $(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
 	@echo " Building..."
 	@mkdir -p $(BUILDDIR)
 	$(CXX) $(CPPFLAGS) $(incl) -c -o $@ $<
-	
+
 %.d: %.cc
 	set -e; $(CXX) -MM $(CPPFLAGS) $< \
 	  | sed 's/\(.*\)\.o[ :]*/\1.o \1.d : \g' > $@; \
 	  [ -s $@ ] || rm -f $@
-	
+
 include $(sources:.cpp:.d)
-	
+
 .PHONY : clean
 clean :
 	@echo " Cleaning..."

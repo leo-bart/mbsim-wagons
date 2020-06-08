@@ -25,7 +25,7 @@
 
 namespace MBSim {
 
-void RailProfile::init(InitStage stage) {
+void RailProfile::init(InitStage stage, const InitConfigSet &config) {
 	if(stage==preInit) {
 		//sign = solid?1:-1;
 		readInputFile();
@@ -35,7 +35,7 @@ void RailProfile::init(InitStage stage) {
 
 		}
 	}
-	ProfileContour::init(stage);
+	ProfileContour::init(stage, config);
 }
 
 std::shared_ptr<std::vector<std::shared_ptr<OpenMBV::PolygonPoint> > > RailProfile::configurePoints() {

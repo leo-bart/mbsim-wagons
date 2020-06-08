@@ -270,7 +270,7 @@ double ContactKinematicsWheelRail::gjkDistance(MatVx2 A,
 			Ymod.set(Range<Var,Var>(0,0),Range<Var,Var>(n,1),Y);
 
 			vtemp = Ymod.row(0).T();
-			Wtemp.resize();
+			Wtemp.resize(1,1);
 			lout = lambda;
 
 			for (int k = 0; k < combs.rows(); k++){
@@ -278,7 +278,7 @@ double ContactKinematicsWheelRail::gjkDistance(MatVx2 A,
 				lambda.init(0);
 
 				// which vectors to test inside the Y set
-				keep.resize();
+				keep.resize(1,1);
 				if (combs.cols() == 2) {
 					keep.resize(1,1);
 					keep(0,0) = combs(0,1);

@@ -75,7 +75,7 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 	double coefRestitution = 0.00;  // TODO modify this parameter to be setted externally
 
 	//acceleration of gravity
-	MBSimEnvironment::getInstance()->setAccelerationOfGravity ( Vec ( "[0.;-9.810;0]" ) );
+	//MBSimEnvironment::getInstance()->setAccelerationOfGravity ( Vec ( "[0.;-9.810;0]" ) );
 
 	/// ---------------------------- DEFINITION OF BODIES -----------------------
 	/// -------------------------------------------------------------------------
@@ -462,7 +462,7 @@ BarberTruck::BarberTruck ( const std::string& projectName, bool withBushings, do
 					if (k == 0 ) phi = 0;
 					if (k == 1 ) phi = M_PI;
 					SqrMat3 rotateY = BasicRotAIKy(phi);
-					SymMat randomRotationMatrix (6,EYE);
+					SqrMat randomRotationMatrix (6,EYE);
 					for (unsigned ri=0;ri<=2;ri++){
 						for (unsigned rj=0;rj<=i;rj++){
 							randomRotationMatrix(ri,rj) = rotateY(ri,rj);

@@ -73,7 +73,7 @@ public:
 
 	/* INHERITED INTERFACE OF ELEMENT */
 	std::string getType() const { return "Rail Profile Contour"; }
-	virtual void init(InitStage stage);
+	virtual void init(InitStage stage, const InitConfigSet &config);
 	/***************************************************/
 
 	BOOST_PARAMETER_MEMBER_FUNCTION( (void), enableOpenMBV, tag, (optional (diffuseColor,(const fmatvec::Vec3&),"[-1;1;1]")(transparency,(double),0))) {

@@ -52,7 +52,7 @@ int main(int argc, char** argv)
 	sys1->setFlushEvery(250);
 	sys1->initialize();
 	sys1->setStopIfNoConvergence(false,true);
-	sys1->setMaximumIterations(1e5);
+	sys1->setMaximumNumberOfIterations(1e5);
 	sys1->setGeneralizedImpulseTolerance(1e-6);
 	sys1->setGeneralizedForceTolerance(1e-6);
 	sys1->setGeneralizedRelativePositionTolerance(5e-6);

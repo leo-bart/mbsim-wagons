@@ -105,7 +105,7 @@ System::System(const string& projectName, const string& inputFileName) :
 	/// --------------- PARAMETERS ----------------------------------------------
 
 	// set the acceleration of gravity
-	MBSimEnvironment::getInstance()->setAccelerationOfGravity(Vec("[0;-9.81;0]"));
+	getMBSimEnvironment()->setAccelerationOfGravity(Vec("[0;-9.81;0]"));
 
 	this->getFrame("I")->enableOpenMBV();
 

@@ -134,7 +134,7 @@ void ProfileContour::setConvexIndexes() {
 
 
 	this->convexSetIndexes.resize(k,2);
-	convexSetIndexes << temp;
+	convexSetIndexes <<= temp;
 
 }
 

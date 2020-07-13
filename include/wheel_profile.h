@@ -57,20 +57,19 @@ public:
 
 class WheelProfile: public ProfileContour {
 public:
-	WheelProfile(const std::string& name, const std::string& file_="", Frame* R=0) :
+	WheelProfile(const std::string &name="", const std::string &file_="", Frame *R=nullptr) :
 		ProfileContour(name,file_,false,true,R) {  }
 
 	/* INHERITED INTERFACE OF ELEMENT */
-	std::string getType() const { return "Wheel Profile Contour"; }
 	virtual void init(InitStage stage, const InitConfigSet &config);
 	/***************************************************/
 
 	/* INHERITED INTERFACE OF CONTOUR */
-	//      virtual fmatvec::Vec3 evalKs(const fmatvec::Vec2 &zeta);
-	//      virtual fmatvec::Vec3 evalKt(const fmatvec::Vec2 &zeta) { return Kt; }
-	//      virtual fmatvec::Vec3 evalParDer1Kn(const fmatvec::Vec2 &zeta);
-	//      virtual fmatvec::Vec3 evalParDer1Ku(const fmatvec::Vec2 &zeta);
-	//      virtual fmatvec::Vec2 evalZeta(const fmatvec::Vec3& WrPoint);
+	     // virtual fmatvec::Vec3 evalKs(const fmatvec::Vec2 &zeta);
+	     // virtual fmatvec::Vec3 evalKt(const fmatvec::Vec2 &zeta);
+	     // virtual fmatvec::Vec3 evalParDer1Kn(const fmatvec::Vec2 &zeta);
+	     // virtual fmatvec::Vec3 evalParDer1Ku(const fmatvec::Vec2 &zeta);
+	     // virtual fmatvec::Vec2 evalZeta(const fmatvec::Vec3& WrPoint);
 	/***************************************************/
 
 	BOOST_PARAMETER_MEMBER_FUNCTION( (void), enableOpenMBV, tag, (optional (diffuseColor,(const fmatvec::Vec3&),"[-1;1;1]")(transparency,(double),0))) {

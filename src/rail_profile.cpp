@@ -25,13 +25,15 @@
 
 namespace MBSim {
 
+	MBSIM_OBJECTFACTORY_REGISTERCLASS(MBSIM, RailProfile)
+
 void RailProfile::init(InitStage stage, const InitConfigSet &config) {
 	if(stage==preInit) {
 		//sign = solid?1:-1;
 		readInputFile();
 	}
 	else if(stage==plotting) {
-		if(plotFeature[openMBV]==true && openMBVRigidBody) {
+		if(plotFeature[openMBV] && openMBVRigidBody) {
 
 		}
 	}

@@ -66,14 +66,21 @@ private:
 /**
  * \brief A class that creates a two-dimensional profile for rail from a point map
  */
-class RailProfile: public ProfileContour {
+class RailProfile : public ProfileContour {
 public:
-	RailProfile(const std::string &name, const std::string &file_, Frame *R=0) :
+	RailProfile(const std::string &name="", const std::string &file_="", Frame *R=nullptr) :
 		ProfileContour(name, file_,true, true, R) { }
 
 	/* INHERITED INTERFACE OF ELEMENT */
-	std::string getType() const { return "Rail Profile Contour"; }
 	virtual void init(InitStage stage, const InitConfigSet &config);
+	/***************************************************/
+
+	/* INHERITED INTERFACE OF CONTOUR */
+	     // virtual fmatvec::Vec3 evalKs(const fmatvec::Vec2 &zeta);
+	     // virtual fmatvec::Vec3 evalKt(const fmatvec::Vec2 &zeta);
+	     // virtual fmatvec::Vec3 evalParDer1Kn(const fmatvec::Vec2 &zeta);
+	     // virtual fmatvec::Vec3 evalParDer1Ku(const fmatvec::Vec2 &zeta);
+	     // virtual fmatvec::Vec2 evalZeta(const fmatvec::Vec3& WrPoint);
 	/***************************************************/
 
 	BOOST_PARAMETER_MEMBER_FUNCTION( (void), enableOpenMBV, tag, (optional (diffuseColor,(const fmatvec::Vec3&),"[-1;1;1]")(transparency,(double),0))) {

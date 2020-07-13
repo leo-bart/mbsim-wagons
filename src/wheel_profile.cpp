@@ -25,6 +25,8 @@
 
 namespace MBSim {
 
+	MBSIM_OBJECTFACTORY_REGISTERCLASS(MBSIM, WheelProfile)
+
 void WheelProfile::init(InitStage stage, const InitConfigSet &config) {
 	if(stage==preInit) {
 		//sign = solid?1:-1;

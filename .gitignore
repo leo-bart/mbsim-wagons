@@ -1,3 +1,6 @@
+# IDE stuff
+*.clang_complete
+
 # Prerequisites
 *.d
 
@@ -33,6 +36,13 @@
 
 # H5 files
 *.h5
+*.ombvh5
+*.mbsh5
+
+# OpenMBV output files
+*.ombvx
+
+# xml
 *.xml
 
 # Integrator garbage
@@ -40,3 +50,7 @@
 *.plt
 *.asc
 .*.lock
+
+# Directories
+/build/*
+/bin/*

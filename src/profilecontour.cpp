@@ -25,7 +25,6 @@
 
 namespace MBSim {
 
-
 void ProfileContour::readInputFile() {
 
 	std::ifstream dataPointsFile(this->file);
